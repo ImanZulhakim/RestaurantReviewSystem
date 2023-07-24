@@ -1,3 +1,6 @@
+# About
+This is a project for SKIP2103 Advance Programming course
+
 # RestaurantReviewSystem
 If error encountered
 
