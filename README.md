@@ -1,9 +1,9 @@
 # About
-This is a project for SKIP2103 Advance Programming course
+This is a project for SKIP2103 Advance Programming course.
 
 # RestaurantReviewSystem
-If error encountered
 
+If error encountered:
 1. GUI>jFrame>set layout> absolute layout
 2. install j-connector
 
