@@ -21,12 +21,12 @@ public class GUI extends javax.swing.JFrame {
     private boolean invalidRatingValue;
     List<Review> reviews, sortReviews;
     List<Restaurant> restaurants, sortRestaurants;
-    
+
     public GUI() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         initComponents();
-        setTitle("Contact Directory System");
+        setTitle("Restaurant Review System");
         setLocationRelativeTo(null);
         setResizable(false);
     }
@@ -923,17 +923,13 @@ public class GUI extends javax.swing.JFrame {
             String updatedName = reviewToUpdate.getResName();
             String updatedReview = JOptionPane.showInputDialog(rootPane, "REVIEW:", reviewToUpdate.getReview());
 
-            double updatedRating = 0.0;
-            boolean validRatingInput = false;
-            while (!validRatingInput) {
-                String ratingInput = JOptionPane.showInputDialog(rootPane, "RATING:", reviewToUpdate.getRating());
-                try {
-                    updatedRating = Double.parseDouble(ratingInput);
-                    validRatingInput = true;
-                } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(rootPane, "INVALID RATING FORMAT. PLEASE ENTER A VALID FORMAT!", "ERROR", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+            // Create a combobox with rating options 1 to 5
+            Integer[] ratingOptions = {1, 2, 3, 4, 5};
+            JComboBox<Integer> ratingComboBox = new JComboBox<>(ratingOptions);
+            ratingComboBox.setSelectedItem(reviewToUpdate.getRating());
+            JOptionPane.showMessageDialog(rootPane, ratingComboBox, "RATING:", JOptionPane.QUESTION_MESSAGE);
+
+            double updatedRating = (int) ratingComboBox.getSelectedItem();
 
             // Create a new Review object with the updated details
             Review updatedRev = new Review(reviewID, updatedName, updatedReview, updatedRating);
@@ -946,6 +942,7 @@ public class GUI extends javax.swing.JFrame {
         }
 
         populateReviewJTable(); //// will update the jTable in Manage Review ----------------------
+
     }//GEN-LAST:event_btnUpdateReviewActionPerformed
 
 //#####################--DELETE REVIEW FUNCTION--################################################
@@ -1044,7 +1041,7 @@ public class GUI extends javax.swing.JFrame {
                         case "CUISINE":
                             return restaurant.getCuisine().equalsIgnoreCase(searchValue);
                         case "RATINGS":
-                             avgRating = resDB.getAverageRatingForRestaurant(restaurant.getName());
+                            avgRating = resDB.getAverageRatingForRestaurant(restaurant.getName());
                             // Convert the searchValue to a double and compare with the average rating
                             try {
                                 searchAvgRating = Double.parseDouble(searchValue);
@@ -1079,7 +1076,7 @@ public class GUI extends javax.swing.JFrame {
         invalidRatingValue = false;
         reviews = resDB.getAllReview();
         sortReviews = sortReviews(reviews, searchBy, searchValue);
-        
+
         if (invalidRatingValue) {
             // Display an error message for invalid rating value only once
             JOptionPane.showMessageDialog(rootPane, "INVALID RATING VALUE. PLEASE ENTER A VALID NUMBER!", "ERROR", JOptionPane.ERROR_MESSAGE);
