@@ -151,27 +151,6 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="121" max="-2" attributes="0"/>
-                              <Component id="txtTitle" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="cboSortBy" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="cbSearchType" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtSearch" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="cboSortOrder" alignment="0" min="-2" pref="208" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="btnSort" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnSearch" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Group type="102" attributes="0">
@@ -181,15 +160,37 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btnDeleteRestaurant" min="-2" pref="85" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="btnRefreshTable" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnRefreshTableRestaurant" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btnBackToMenu" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="jScrollPane2" min="-2" pref="496" max="-2" attributes="0"/>
                               </Group>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="txtTitle" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="cboSortByRestaurant" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="cbSearchType" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="txtSearch" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="cboSortOrderRestaurant" alignment="0" min="-2" pref="208" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="btnSortRestaurant" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnSearchRestaurant" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -202,19 +203,19 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="cbSearchType" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtSearch" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnSearch" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSearchRestaurant" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="cboSortBy" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboSortOrder" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnSort" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboSortByRestaurant" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboSortOrderRestaurant" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSortRestaurant" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jScrollPane2" min="-2" pref="428" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnRefreshTable" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnRefreshTableRestaurant" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBackToMenu" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnMoveToAddPanel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnUpdate" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -226,13 +227,16 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btnSearch">
+            <Component class="javax.swing.JButton" name="btnSearchRestaurant">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="SEARCH"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchRestaurantActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnBackToMenu">
               <Properties>
@@ -345,7 +349,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteRestaurantActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnRefreshTable">
+            <Component class="javax.swing.JButton" name="btnRefreshTableRestaurant">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
@@ -353,7 +357,7 @@
                 <Property name="text" type="java.lang.String" value="REFRESH"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRefreshTableActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRefreshTableRestaurantActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="txtTitle">
@@ -365,7 +369,7 @@
                   <Font name="Tw Cen MT Condensed" size="36" style="0"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="RESTAURANT REVIEW SYSTEM"/>
+                <Property name="text" type="java.lang.String" value="MANAGE RESTAURANT"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnMoveToAddPanel">
@@ -379,7 +383,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveToAddPanelActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JComboBox" name="cboSortBy">
+            <Component class="javax.swing.JComboBox" name="cboSortByRestaurant">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
@@ -390,7 +394,7 @@
                     <StringItem index="1" value="NAME"/>
                     <StringItem index="2" value="LOCATION"/>
                     <StringItem index="3" value="CUISINE"/>
-                    <StringItem index="4" value="RATINGS"/>
+                    <StringItem index="4" value="AVERAGE RATING"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -398,7 +402,7 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JComboBox" name="cboSortOrder">
+            <Component class="javax.swing.JComboBox" name="cboSortOrderRestaurant">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
@@ -415,13 +419,16 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="btnSort">
+            <Component class="javax.swing.JButton" name="btnSortRestaurant">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="SORT"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSortRestaurantActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -612,18 +619,18 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="cboSortBy1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="cbSearchType1" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
+                                  <Component id="cboSortByReview" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="cbSearchTypeReview" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                   <Component id="txtSearchReview" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="cboSortOrder1" alignment="0" min="-2" pref="208" max="-2" attributes="0"/>
+                                  <Component id="cboSortOrderReview" alignment="0" min="-2" pref="208" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="btnSort1" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="btnSearch1" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                                  <Component id="btnSortReview" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="btnSearchReview" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -632,11 +639,11 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="btnMoveToAddReviewPanel" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btnUpdate1" min="-2" pref="91" max="-2" attributes="0"/>
+                                      <Component id="btnUpdateReview" min="-2" pref="91" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btnDeleteReview" min="-2" pref="85" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="btnRefreshTable1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="btnRefreshTableReview" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="btnBackToMenu1" min="-2" max="-2" attributes="0"/>
                                   </Group>
@@ -649,7 +656,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="txtTitle2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="217" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="175" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -660,24 +667,24 @@
                       <Component id="txtTitle2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="cbSearchType1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbSearchTypeReview" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="txtSearchReview" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnSearch1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSearchReview" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="cboSortBy1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboSortOrder1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnSort1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboSortByReview" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboSortOrderReview" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnSortReview" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="jScrollPane3" min="-2" pref="428" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btnRefreshTable1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnRefreshTableReview" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnBackToMenu1" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnMoveToAddReviewPanel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnUpdate1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnUpdateReview" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnDeleteReview" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
@@ -686,13 +693,16 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btnSearch1">
+            <Component class="javax.swing.JButton" name="btnSearchReview">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="SEARCH"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSearchReviewActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btnBackToMenu1">
               <Properties>
@@ -751,7 +761,7 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JButton" name="btnUpdate1">
+            <Component class="javax.swing.JButton" name="btnUpdateReview">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
@@ -759,7 +769,7 @@
                 <Property name="text" type="java.lang.String" value="UPDATE"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdate1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateReviewActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtSearchReview">
@@ -769,18 +779,17 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="cbSearchType1">
+            <Component class="javax.swing.JComboBox" name="cbSearchTypeReview">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="5">
+                  <StringArray count="4">
                     <StringItem index="0" value="SEARCH BY"/>
                     <StringItem index="1" value="NAME"/>
-                    <StringItem index="2" value="LOCATION"/>
-                    <StringItem index="3" value="CUISINE"/>
-                    <StringItem index="4" value="RATINGS"/>
+                    <StringItem index="2" value="REVIEW"/>
+                    <StringItem index="3" value="RATING"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -799,7 +808,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteReviewActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnRefreshTable1">
+            <Component class="javax.swing.JButton" name="btnRefreshTableReview">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
@@ -807,7 +816,7 @@
                 <Property name="text" type="java.lang.String" value="REFRESH"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRefreshTable1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRefreshTableReviewActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="txtTitle2">
@@ -819,7 +828,7 @@
                   <Font name="Tw Cen MT Condensed" size="36" style="0"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="REVIEWs"/>
+                <Property name="text" type="java.lang.String" value="MANAGE REVIEW"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnMoveToAddReviewPanel">
@@ -833,18 +842,17 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMoveToAddReviewPanelActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JComboBox" name="cboSortBy1">
+            <Component class="javax.swing.JComboBox" name="cboSortByReview">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="5">
+                  <StringArray count="4">
                     <StringItem index="0" value="SORT BY"/>
                     <StringItem index="1" value="NAME"/>
-                    <StringItem index="2" value="LOCATION"/>
-                    <StringItem index="3" value="CUISINE"/>
-                    <StringItem index="4" value="RATINGS"/>
+                    <StringItem index="2" value="REVIEW"/>
+                    <StringItem index="3" value="RATING"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -852,7 +860,7 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JComboBox" name="cboSortOrder1">
+            <Component class="javax.swing.JComboBox" name="cboSortOrderReview">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
@@ -869,13 +877,16 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JButton" name="btnSort1">
+            <Component class="javax.swing.JButton" name="btnSortReview">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="10" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="SORT"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSortReviewActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

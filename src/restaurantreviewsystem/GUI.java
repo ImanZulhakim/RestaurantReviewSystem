@@ -1,14 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package restaurantreviewsystem;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -18,9 +15,13 @@ import javax.swing.table.DefaultTableModel;
 public class GUI extends javax.swing.JFrame {
 
     Connection conn;
-    String name, location, cuisine, review;
-    double rating, avgRating;
-
+    String name, location, cuisine, reviewText, searchBy, searchValue;
+    double rating, avgRating, searchRating, searchAvgRating;
+    int reviewID;
+    private boolean invalidRatingValue;
+    List<Review> reviews, sortReviews;
+    List<Restaurant> restaurants, sortRestaurants;
+    
     public GUI() {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,8 +30,8 @@ public class GUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
     }
-    Restaurant restaurant;
-    Review rev;
+    Restaurant restaurant, updatedRestaurant;
+    Review rev, updatedRev;
     RestaurantReviewSystem resDB = new RestaurantReviewSystem();
 
     /**
@@ -50,7 +51,7 @@ public class GUI extends javax.swing.JFrame {
         btnOpenManageReview = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
         panelRestaurant = new javax.swing.JPanel();
-        btnSearch = new javax.swing.JButton();
+        btnSearchRestaurant = new javax.swing.JButton();
         btnBackToMenu = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblRestaurant = new javax.swing.JTable();
@@ -58,12 +59,12 @@ public class GUI extends javax.swing.JFrame {
         txtSearch = new javax.swing.JTextField();
         cbSearchType = new javax.swing.JComboBox<>();
         btnDeleteRestaurant = new javax.swing.JButton();
-        btnRefreshTable = new javax.swing.JButton();
+        btnRefreshTableRestaurant = new javax.swing.JButton();
         txtTitle = new javax.swing.JLabel();
         btnMoveToAddPanel = new javax.swing.JButton();
-        cboSortBy = new javax.swing.JComboBox<>();
-        cboSortOrder = new javax.swing.JComboBox<>();
-        btnSort = new javax.swing.JButton();
+        cboSortByRestaurant = new javax.swing.JComboBox<>();
+        cboSortOrderRestaurant = new javax.swing.JComboBox<>();
+        btnSortRestaurant = new javax.swing.JButton();
         panelAddRestaurant = new javax.swing.JPanel();
         btnAddRes = new javax.swing.JButton();
         lblEmail1 = new javax.swing.JLabel();
@@ -75,20 +76,20 @@ public class GUI extends javax.swing.JFrame {
         txtCuisine = new javax.swing.JTextField();
         btnBack = new javax.swing.JButton();
         panelReview = new javax.swing.JPanel();
-        btnSearch1 = new javax.swing.JButton();
+        btnSearchReview = new javax.swing.JButton();
         btnBackToMenu1 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblReview = new javax.swing.JTable();
-        btnUpdate1 = new javax.swing.JButton();
+        btnUpdateReview = new javax.swing.JButton();
         txtSearchReview = new javax.swing.JTextField();
-        cbSearchType1 = new javax.swing.JComboBox<>();
+        cbSearchTypeReview = new javax.swing.JComboBox<>();
         btnDeleteReview = new javax.swing.JButton();
-        btnRefreshTable1 = new javax.swing.JButton();
+        btnRefreshTableReview = new javax.swing.JButton();
         txtTitle2 = new javax.swing.JLabel();
         btnMoveToAddReviewPanel = new javax.swing.JButton();
-        cboSortBy1 = new javax.swing.JComboBox<>();
-        cboSortOrder1 = new javax.swing.JComboBox<>();
-        btnSort1 = new javax.swing.JButton();
+        cboSortByReview = new javax.swing.JComboBox<>();
+        cboSortOrderReview = new javax.swing.JComboBox<>();
+        btnSortReview = new javax.swing.JButton();
         panelAddReview = new javax.swing.JPanel();
         btnAddReview = new javax.swing.JButton();
         lblResNameReview = new javax.swing.JLabel();
@@ -170,8 +171,13 @@ public class GUI extends javax.swing.JFrame {
 
         panelRestaurant.setBackground(new java.awt.Color(204, 204, 255));
 
-        btnSearch.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        btnSearch.setText("SEARCH");
+        btnSearchRestaurant.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnSearchRestaurant.setText("SEARCH");
+        btnSearchRestaurant.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchRestaurantActionPerformed(evt);
+            }
+        });
 
         btnBackToMenu.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnBackToMenu.setText("BACK");
@@ -217,18 +223,18 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        btnRefreshTable.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        btnRefreshTable.setText("REFRESH");
-        btnRefreshTable.addActionListener(new java.awt.event.ActionListener() {
+        btnRefreshTableRestaurant.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnRefreshTableRestaurant.setText("REFRESH");
+        btnRefreshTableRestaurant.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshTableActionPerformed(evt);
+                btnRefreshTableRestaurantActionPerformed(evt);
             }
         });
 
         txtTitle.setBackground(new java.awt.Color(0, 0, 0));
         txtTitle.setFont(new java.awt.Font("Tw Cen MT Condensed", 0, 36)); // NOI18N
         txtTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtTitle.setText("RESTAURANT REVIEW SYSTEM");
+        txtTitle.setText("MANAGE RESTAURANT");
 
         btnMoveToAddPanel.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnMoveToAddPanel.setText("ADD NEW RESTAURANT");
@@ -238,14 +244,19 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        cboSortBy.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        cboSortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SORT BY", "NAME", "LOCATION", "CUISINE", "RATINGS" }));
+        cboSortByRestaurant.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        cboSortByRestaurant.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SORT BY", "NAME", "LOCATION", "CUISINE", "AVERAGE RATING" }));
 
-        cboSortOrder.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        cboSortOrder.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ORDER BY", "ASCENDING", "DESCENDING" }));
+        cboSortOrderRestaurant.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        cboSortOrderRestaurant.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ORDER BY", "ASCENDING", "DESCENDING" }));
 
-        btnSort.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        btnSort.setText("SORT");
+        btnSortRestaurant.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnSortRestaurant.setText("SORT");
+        btnSortRestaurant.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortRestaurantActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelRestaurantLayout = new javax.swing.GroupLayout(panelRestaurant);
         panelRestaurant.setLayout(panelRestaurantLayout);
@@ -253,22 +264,6 @@ public class GUI extends javax.swing.JFrame {
             panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelRestaurantLayout.createSequentialGroup()
                 .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelRestaurantLayout.createSequentialGroup()
-                        .addGap(121, 121, 121)
-                        .addComponent(txtTitle))
-                    .addGroup(panelRestaurantLayout.createSequentialGroup()
-                        .addGap(48, 48, 48)
-                        .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(cboSortBy, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbSearchType, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtSearch)
-                            .addComponent(cboSortOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnSort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelRestaurantLayout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -279,11 +274,27 @@ public class GUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnDeleteRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRefreshTable)
+                                .addComponent(btnRefreshTableRestaurant)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnBackToMenu))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(panelRestaurantLayout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtTitle)
+                            .addGroup(panelRestaurantLayout.createSequentialGroup()
+                                .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(cboSortByRestaurant, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cbSearchType, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtSearch)
+                                    .addComponent(cboSortOrderRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btnSortRestaurant, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSearchRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         panelRestaurantLayout.setVerticalGroup(
             panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -294,17 +305,17 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbSearchType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch))
+                    .addComponent(btnSearchRestaurant))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboSortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboSortOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSort))
+                    .addComponent(cboSortByRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboSortOrderRestaurant, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSortRestaurant))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelRestaurantLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRefreshTable)
+                    .addComponent(btnRefreshTableRestaurant)
                     .addComponent(btnBackToMenu)
                     .addComponent(btnMoveToAddPanel)
                     .addComponent(btnUpdate)
@@ -410,8 +421,13 @@ public class GUI extends javax.swing.JFrame {
 
         panelReview.setBackground(new java.awt.Color(204, 204, 255));
 
-        btnSearch1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        btnSearch1.setText("SEARCH");
+        btnSearchReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnSearchReview.setText("SEARCH");
+        btnSearchReview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchReviewActionPerformed(evt);
+            }
+        });
 
         btnBackToMenu1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnBackToMenu1.setText("BACK");
@@ -433,18 +449,18 @@ public class GUI extends javax.swing.JFrame {
         tblReview.setRequestFocusEnabled(false);
         jScrollPane3.setViewportView(tblReview);
 
-        btnUpdate1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        btnUpdate1.setText("UPDATE");
-        btnUpdate1.addActionListener(new java.awt.event.ActionListener() {
+        btnUpdateReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnUpdateReview.setText("UPDATE");
+        btnUpdateReview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnUpdate1ActionPerformed(evt);
+                btnUpdateReviewActionPerformed(evt);
             }
         });
 
         txtSearchReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
 
-        cbSearchType1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        cbSearchType1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SEARCH BY", "NAME", "LOCATION", "CUISINE", "RATINGS" }));
+        cbSearchTypeReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        cbSearchTypeReview.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SEARCH BY", "NAME", "REVIEW", "RATING" }));
 
         btnDeleteReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnDeleteReview.setText("DELETE");
@@ -454,18 +470,18 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        btnRefreshTable1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        btnRefreshTable1.setText("REFRESH");
-        btnRefreshTable1.addActionListener(new java.awt.event.ActionListener() {
+        btnRefreshTableReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnRefreshTableReview.setText("REFRESH");
+        btnRefreshTableReview.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshTable1ActionPerformed(evt);
+                btnRefreshTableReviewActionPerformed(evt);
             }
         });
 
         txtTitle2.setBackground(new java.awt.Color(0, 0, 0));
         txtTitle2.setFont(new java.awt.Font("Tw Cen MT Condensed", 0, 36)); // NOI18N
         txtTitle2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtTitle2.setText("REVIEWs");
+        txtTitle2.setText("MANAGE REVIEW");
 
         btnMoveToAddReviewPanel.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnMoveToAddReviewPanel.setText("ADD NEW REVIEW");
@@ -475,14 +491,19 @@ public class GUI extends javax.swing.JFrame {
             }
         });
 
-        cboSortBy1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        cboSortBy1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SORT BY", "NAME", "LOCATION", "CUISINE", "RATINGS" }));
+        cboSortByReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        cboSortByReview.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SORT BY", "NAME", "REVIEW", "RATING" }));
 
-        cboSortOrder1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        cboSortOrder1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ORDER BY", "ASCENDING", "DESCENDING" }));
+        cboSortOrderReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        cboSortOrderReview.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ORDER BY", "ASCENDING", "DESCENDING" }));
 
-        btnSort1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        btnSort1.setText("SORT");
+        btnSortReview.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnSortReview.setText("SORT");
+        btnSortReview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSortReviewActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelReviewLayout = new javax.swing.GroupLayout(panelReview);
         panelReview.setLayout(panelReviewLayout);
@@ -493,27 +514,27 @@ public class GUI extends javax.swing.JFrame {
                     .addGroup(panelReviewLayout.createSequentialGroup()
                         .addGap(48, 48, 48)
                         .addGroup(panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(cboSortBy1, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbSearchType1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cboSortByReview, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cbSearchTypeReview, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtSearchReview)
-                            .addComponent(cboSortOrder1, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cboSortOrderReview, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btnSort1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnSortReview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnSearchReview, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(panelReviewLayout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addGroup(panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(panelReviewLayout.createSequentialGroup()
                                 .addComponent(btnMoveToAddReviewPanel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnUpdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnUpdateReview, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnDeleteReview, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnRefreshTable1)
+                                .addComponent(btnRefreshTableReview)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnBackToMenu1))
                             .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 496, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -521,7 +542,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelReviewLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(txtTitle2)
-                .addGap(217, 217, 217))
+                .addGap(175, 175, 175))
         );
         panelReviewLayout.setVerticalGroup(
             panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -530,22 +551,22 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(txtTitle2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbSearchType1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbSearchTypeReview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSearchReview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSearch1))
+                    .addComponent(btnSearchReview))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboSortBy1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboSortOrder1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSort1))
+                    .addComponent(cboSortByReview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboSortOrderReview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSortReview))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelReviewLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRefreshTable1)
+                    .addComponent(btnRefreshTableReview)
                     .addComponent(btnBackToMenu1)
                     .addComponent(btnMoveToAddReviewPanel)
-                    .addComponent(btnUpdate1)
+                    .addComponent(btnUpdateReview)
                     .addComponent(btnDeleteReview))
                 .addGap(30, 30, 30))
         );
@@ -685,148 +706,558 @@ public class GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-
+//##########################################################################################
+//---------------------------------------MANAGE RESTAURANT--------------------------------------------------------------
+//##########################################################################################
     private void btnOpenManageRestaurantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenManageRestaurantActionPerformed
         jTabbedPane.setSelectedIndex(1);
-         updateResJTable(); //// will update the jTable in Manage Restaurant ----------------------
+        populateRestaurantJTable(); //// will update the jTable in Manage Restaurant ----------------------
     }//GEN-LAST:event_btnOpenManageRestaurantActionPerformed
 
     private void btnOpenManageReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenManageReviewActionPerformed
         jTabbedPane.setSelectedIndex(3);
-        updateReviewJTable();/////will update the jTable in Manage Review----------------------
+        populateReviewJTable();/////will update the jTable in Manage Review----------------------
     }//GEN-LAST:event_btnOpenManageReviewActionPerformed
 
     private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_btnExitActionPerformed
-    //##########################################################################################
-    //---------------------------------------MANAGE RESTAURANT--------------------------------------------------------------
-    //##########################################################################################
-    //#######################--ADD RESTAURANT FUNCTION--#################################################
+
+//##########################################################################################
+//---------------------------------------MANAGE RESTAURANT--------------------------------------------------------------
+//##########################################################################################
+//#######################--ADD RESTAURANT FUNCTION--#################################################
     private void btnMoveToAddPanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveToAddPanelActionPerformed
         jTabbedPane.setSelectedIndex(2);
     }//GEN-LAST:event_btnMoveToAddPanelActionPerformed
 
     private void btnAddResActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddResActionPerformed
-        name = txtName.getText();
-        location = txtLocation.getText();
-        cuisine = txtCuisine.getText();
+        name = txtName.getText().trim();
+        location = txtLocation.getText().trim();
+        cuisine = txtCuisine.getText().trim();
+
+        // Check if any of the required fields is empty
+        if (name.isEmpty() || location.isEmpty() || cuisine.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "PLEASE FILL IN ALL DETAILS!", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         restaurant = new Restaurant(name, location, cuisine);
 
-        resDB.addRestaurant(restaurant);
-        JOptionPane.showMessageDialog(rootPane, name + " WAS SUCCESSFULLY ADDED!");
-        txtName.setText("");
-        txtLocation.setText("");
-        txtCuisine.setText("");
-       updateResJTable(); //// will update the jTable in Manage Restaurant ----------------------
-       jTabbedPane.setSelectedIndex(1);
+        try {
+            resDB.addRestaurant(restaurant);
+            JOptionPane.showMessageDialog(rootPane, name + " WAS SUCCESSFULLY ADDED!");
+            txtName.setText("");
+            txtLocation.setText("");
+            txtCuisine.setText("");
+            populateRestaurantJTable(); //// will update the jTable in Manage Restaurant ----------------------
+            jTabbedPane.setSelectedIndex(1);
+        } catch (RestaurantAlreadyExistsException ex) {
+            JOptionPane.showMessageDialog(rootPane, ex.getMessage(), "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnAddResActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         jTabbedPane.setSelectedIndex(1);
+        txtName.setText("");
+        txtLocation.setText("");
+        txtCuisine.setText("");
     }//GEN-LAST:event_btnBackActionPerformed
 
 //#####################--UPDATE RESTAURANT FUNCTION--################################################
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        // TODO add your handling code here:
 
+        name = JOptionPane.showInputDialog(rootPane, "ENTER THE NAME OF THE RESTAURANT TO UPDATE:");
+        if (name == null) {
+            // The user canceled the input dialog, so just return without doing anything
+            return;
+        }
+
+        // Fetch data for the specified restaurant from the database
+        Restaurant restaurantToUpdate = resDB.getRestaurantByName(name);
+
+        if (restaurantToUpdate != null) {
+            // Display existing data in another input dialog for the user to update
+            // String updatedName = JOptionPane.showInputDialog(rootPane, "Restaurant Name:", restaurantToUpdate.getName());
+            String updatedName = (restaurantToUpdate.getName());
+            String updatedLocation = JOptionPane.showInputDialog(rootPane, "LOCATION:", restaurantToUpdate.getLocation());
+            String updatedCuisine = JOptionPane.showInputDialog(rootPane, "CUISINE:", restaurantToUpdate.getCuisine());
+
+            // Create a new Restaurant object with the updated details
+            updatedRestaurant = new Restaurant(updatedName, updatedLocation, updatedCuisine);
+            // Call the updateRestaurant method to update the restaurant in the database
+            resDB.updateRestaurant(updatedRestaurant);
+
+            JOptionPane.showMessageDialog(rootPane, "RESTAURANT UPDATED SUCCESSFULLY!");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "RESTAURANT NOT FOUND!");
+        }
+
+        populateRestaurantJTable(); //// will update the jTable in Manage Restaurant ----------------------
     }//GEN-LAST:event_btnUpdateActionPerformed
 
 //#####################--DELETE RESTAURANT FUNCTION--################################################
     private void btnDeleteRestaurantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteRestaurantActionPerformed
         // TODO add your handling code here:
-        name = txtSearch.getText();
-        resDB.deleteRestaurantByName(name);
-        txtSearch.setText("");
-        updateResJTable(); //// will update the jTable in Manage Restaurant ----------------------
+        name = JOptionPane.showInputDialog(rootPane, "ENTER THE NAME OF THE RESTAURANT TO DELETE:");
+        if (name == null) {
+            // The user canceled the input dialog, so just return without doing anything
+            return;
+        }
+
+        Restaurant restaurantToDelete = resDB.getRestaurantByName(name);
+        if (restaurantToDelete != null) {
+            resDB.deleteRestaurantByName(name);
+            populateRestaurantJTable(); //// will update the jTable in Manage Restaurant ----------------------
+            JOptionPane.showMessageDialog(rootPane, "RESTAURANT DELETED SUCCESSFULLY!");
+        } else
+            JOptionPane.showMessageDialog(rootPane, "RESTAURANT NOT FOUND!");
     }//GEN-LAST:event_btnDeleteRestaurantActionPerformed
 
 //#####################--REFRESH RESTAURANT FUNCTION--################################################
-    private void btnRefreshTableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshTableActionPerformed
+    private void btnRefreshTableRestaurantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshTableRestaurantActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnRefreshTableActionPerformed
+        populateRestaurantJTable(); //// will update the jTable in Manage Restaurant ----------------------
+        txtSearch.setText("");
+    }//GEN-LAST:event_btnRefreshTableRestaurantActionPerformed
 
 //#####################--BACK TO MENU FROM RESTAURANT--################################################
     private void btnBackToMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToMenuActionPerformed
         jTabbedPane.setSelectedIndex(0);
     }//GEN-LAST:event_btnBackToMenuActionPerformed
-    //##########################################################################################
-    //---------------------------------------MANAGE REVIEW--------------------------------------------------------------
-    //##########################################################################################
-    //#######################--ADD REVIEW FUNCTION--#################################################
+
+//##########################################################################################
+//---------------------------------------MANAGE REVIEW--------------------------------------------------------------
+//##########################################################################################
+//#######################--ADD REVIEW FUNCTION--#################################################
     private void btnMoveToAddReviewPanelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMoveToAddReviewPanelActionPerformed
-        jTabbedPane.setSelectedIndex(4);
+        String restaurantName = JOptionPane.showInputDialog(rootPane, "ENTER THE NAME OF THE RESTAURANT:", "Restaurant Name");
+
+        if (restaurantName != null && !restaurantName.isEmpty()) {
+            // Check if the restaurant name exists in the database before proceeding to the Add Review panel
+            Restaurant restaurant = resDB.getRestaurantByName(restaurantName);
+            if (restaurant != null) {
+                txtResNameReview.setText(restaurantName);
+                jTabbedPane.setSelectedIndex(4); // Move to the Add Review panel
+            } else {
+                JOptionPane.showMessageDialog(rootPane, "RESTAURANT NOT FOUND!", "ERROR", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }//GEN-LAST:event_btnMoveToAddReviewPanelActionPerformed
 
     private void btnAddReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddReviewActionPerformed
-         name = txtResNameReview.getText();
-        review = txtReview.getText();
+        name = txtResNameReview.getText().trim();
+        reviewText = txtReview.getText().trim();
 
-        ButtonModel selectedButton = buttonGroup1.getSelection();
-        if (selectedButton != null) {
-            try {
-                if (rb1.isSelected()) {
-                    rating = Double.parseDouble(rb1.getText());
-                } else if (rb2.isSelected()) {
-                    rating = Double.parseDouble(rb2.getText());
-                } else if (rb3.isSelected()) {
-                    rating = Double.parseDouble(rb3.getText());
-                } else if (rb4.isSelected()) {
-                    rating = Double.parseDouble(rb4.getText());
-                } else if (rb5.isSelected()) {
-                    rating = Double.parseDouble(rb5.getText());
-                }
-            } catch (NumberFormatException e) {
-                // Handle the case where the selectedValue is not a valid double
-                e.printStackTrace();
-            }
+        // Check if any of the required fields is empty
+        if (name.isEmpty() || reviewText.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "PLEASE FILL IN ALL DETAILS!", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-        rev = new Review(name, review, rating);
+        ButtonModel selectedButton = buttonGroup1.getSelection();
+        if (selectedButton == null) {
+            // Display an error message if the rating is not chosen
+            JOptionPane.showMessageDialog(rootPane, "PLEASE SELECT A RATING!", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-        resDB.addReview(name, rev);
-        updateResJTable(); //// will update the jTable in Restaurant Review----------------------
-        JOptionPane.showMessageDialog(rootPane, "REVIEW FOR " + name + " IS SUCCESSFULLY ADDED!");
-        txtResNameReview.setText("");
-        txtReview.setText("");
-        buttonGroup1.clearSelection();
-        
-        jTabbedPane.setSelectedIndex(3);
-        updateReviewJTable();/////will update the jTable in Manage Review----------------------
+        if (rb1.isSelected()) {
+            rating = Double.parseDouble(rb1.getText());
+        } else if (rb2.isSelected()) {
+            rating = Double.parseDouble(rb2.getText());
+        } else if (rb3.isSelected()) {
+            rating = Double.parseDouble(rb3.getText());
+        } else if (rb4.isSelected()) {
+            rating = Double.parseDouble(rb4.getText());
+        } else if (rb5.isSelected()) {
+            rating = Double.parseDouble(rb5.getText());
+        }
+
+        // Check if the restaurant name exists in the database before adding the review
+        Restaurant restaurant = resDB.getRestaurantByName(name);
+        if (restaurant != null) {
+            rev = new Review(name, reviewText, rating);
+            resDB.addReview(name, rev);
+            populateRestaurantJTable(); //// will update the jTable in Restaurant Review----------------------
+            JOptionPane.showMessageDialog(rootPane, "REVIEW FOR " + name + " IS SUCCESSFULLY ADDED!");
+            txtResNameReview.setText("");
+            txtReview.setText("");
+            buttonGroup1.clearSelection();
+
+            jTabbedPane.setSelectedIndex(3);
+            populateReviewJTable();/////will update the jTable in Manage Review----------------------
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "RESTAURANT NOT FOUND!", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnAddReviewActionPerformed
 
     private void btnBackReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackReviewActionPerformed
         jTabbedPane.setSelectedIndex(3);
+        txtResNameReview.setText("");
+        txtReview.setText("");
+        buttonGroup1.clearSelection();
     }//GEN-LAST:event_btnBackReviewActionPerformed
 
-    //#####################--UPDATE RESTAURANT FUNCTION--################################################
-    private void btnUpdate1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdate1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnUpdate1ActionPerformed
+    //#####################--UPDATE REVIEW FUNCTION--################################################
+    private void btnUpdateReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateReviewActionPerformed
+        reviewID = 0;
+        try {
+            String input = JOptionPane.showInputDialog(rootPane, "ENTER THE ID OF THE REVIEW TO UPDATE:");
+            if (input == null) {
+                // The user canceled the input dialog, so just return without doing anything
+                return;
+            }
+            reviewID = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(rootPane, "INVALID REVIEW ID. PLEASE ENTER A VALID NUMBER!", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    //#####################--DELETE RESTAURANT FUNCTION--################################################
+        // Fetch data for the specified review from the database
+        Review reviewToUpdate = resDB.getReviewById(reviewID);
+
+        if (reviewToUpdate != null) {
+            // Display existing data in another input dialog for the user to update
+            String updatedName = reviewToUpdate.getResName();
+            String updatedReview = JOptionPane.showInputDialog(rootPane, "REVIEW:", reviewToUpdate.getReview());
+
+            double updatedRating = 0.0;
+            boolean validRatingInput = false;
+            while (!validRatingInput) {
+                String ratingInput = JOptionPane.showInputDialog(rootPane, "RATING:", reviewToUpdate.getRating());
+                try {
+                    updatedRating = Double.parseDouble(ratingInput);
+                    validRatingInput = true;
+                } catch (NumberFormatException e) {
+                    JOptionPane.showMessageDialog(rootPane, "INVALID RATING FORMAT. PLEASE ENTER A VALID FORMAT!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
+            // Create a new Review object with the updated details
+            Review updatedRev = new Review(reviewID, updatedName, updatedReview, updatedRating);
+            // Call the updateReview method to update the review in the database
+            resDB.updateReview(updatedRev);
+
+            JOptionPane.showMessageDialog(rootPane, "REVIEW UPDATED SUCCESSFULLY!");
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "REVIEW NOT FOUND!");
+        }
+
+        populateReviewJTable(); //// will update the jTable in Manage Review ----------------------
+    }//GEN-LAST:event_btnUpdateReviewActionPerformed
+
+//#####################--DELETE REVIEW FUNCTION--################################################
     private void btnDeleteReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteReviewActionPerformed
         // TODO add your handling code here:
-        name = txtSearchReview.getText();
-        resDB.deleteReviewByName(name);
-        txtSearchReview.setText("");
-        updateReviewJTable(); //// will update the jTable in Manage Restaurant ----------------------
+        reviewID = 0;
+        try {
+            String input = JOptionPane.showInputDialog(rootPane, "ENTER THE ID OF THE REVIEW TO DELETE:");
+            if (input == null) {
+                // The user canceled the input dialog, so just return without doing anything
+                return;
+            }
+            reviewID = Integer.parseInt(input);
+
+            if (resDB.deleteReviewById(reviewID)) {
+                // If the review is deleted successfully, display a message and update the JTable
+                JOptionPane.showMessageDialog(rootPane, "REVIEW WITH ID " + reviewID + " HAS BEEN DELETED!", "DELETED", JOptionPane.INFORMATION_MESSAGE);
+                populateReviewJTable(); // will update the jTable in Manage Restaurant
+            } else {
+                // If the review ID is not found, display an error message
+                JOptionPane.showMessageDialog(rootPane, "REVIEW WITH ID " + reviewID + " NOT FOUND!", "NOT FOUND", JOptionPane.ERROR_MESSAGE);
+            } //// will update the jTable in Manage Restaurant ----------------------
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(rootPane, "INVALID ID FORMAT. PLEASE ENTER A VALID FORMAT!", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnDeleteReviewActionPerformed
 
-    //#####################--REFRESH RESTAURANT FUNCTION--################################################
-    private void btnRefreshTable1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshTable1ActionPerformed
+    //#####################--REFRESH REVEIW TABLE--################################################
+    private void btnRefreshTableReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshTableReviewActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnRefreshTable1ActionPerformed
+        populateReviewJTable(); //// will update the jTable in Manage Restaurant ----------------------
+        txtSearchReview.setText("");
+    }//GEN-LAST:event_btnRefreshTableReviewActionPerformed
 
-    //#####################--BACK TO MENU FROM RESTAURANT--################################################
+    //#####################--BACK TO MENU FROM REVIEW--################################################
     private void btnBackToMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToMenu1ActionPerformed
-      jTabbedPane.setSelectedIndex(0);
+        jTabbedPane.setSelectedIndex(0);
     }//GEN-LAST:event_btnBackToMenu1ActionPerformed
 
-    
-    public void updateResJTable() {
+    //##########################################################################################
+    //---------------------------------------SEARCH RESTAURANT--------------------------------------------------------------
+    //##########################################################################################
+
+    private void btnSearchRestaurantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchRestaurantActionPerformed
+        searchBy = cbSearchType.getSelectedItem().toString();
+        searchValue = txtSearch.getText();
+        if (searchBy.equalsIgnoreCase("SEARCH BY")) {
+            JOptionPane.showMessageDialog(rootPane, "PLEASE CHOOSE THE CONDITION!", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Call the sorting method based on selected values         
+            populateRestaurantJTableAfterSearch(searchBy, searchValue);
+
+        }
+
+    }//GEN-LAST:event_btnSearchRestaurantActionPerformed
+
+    public void populateRestaurantJTableAfterSearch(String searchBy, String searchValue) {
+        invalidRatingValue = false;
+        restaurants = resDB.getAllRestaurants();
+        sortRestaurants = sortRestaurants(restaurants, searchBy, searchValue);
+
+        if (sortRestaurants.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "NO MATCHING RESTAURANTS FOUND!", "NO RESULTS", JOptionPane.ERROR_MESSAGE);
+        } else {
+            DefaultTableModel model = new DefaultTableModel();
+            // Add columns to the table model
+            model.addColumn("NAME");
+            model.addColumn("LOCATION");
+            model.addColumn("CUISINE");
+            model.addColumn("AVERAGE RATING");
+
+            for (Restaurant restaurant : sortRestaurants) {
+                name = restaurant.getName();
+                location = restaurant.getLocation();
+                cuisine = restaurant.getCuisine();
+                avgRating = resDB.getAverageRatingForRestaurant(name);
+
+                // Add a new row to the table model with name, location, cuisine, and average rating
+                model.addRow(new Object[]{name, location, cuisine, avgRating});
+            }
+
+            tblRestaurant.setModel(model);
+            JOptionPane.showMessageDialog(rootPane, "RESTAURANTS FOUND!", "FOUND", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+    }
+
+    private List<Restaurant> sortRestaurants(List<Restaurant> restaurants, String searchBy, String searchValue) {
+        return restaurants.stream() //lambda
+                .filter(restaurant -> {
+                    switch (searchBy) {
+                        case "NAME":
+                            return restaurant.getName().equalsIgnoreCase(searchValue);
+                        case "LOCATION":
+                            return restaurant.getLocation().equalsIgnoreCase(searchValue);
+                        case "CUISINE":
+                            return restaurant.getCuisine().equalsIgnoreCase(searchValue);
+                        case "RATINGS":
+                             avgRating = resDB.getAverageRatingForRestaurant(restaurant.getName());
+                            // Convert the searchValue to a double and compare with the average rating
+                            try {
+                                searchAvgRating = Double.parseDouble(searchValue);
+                                return avgRating == searchAvgRating;
+                            } catch (NumberFormatException e) {
+                                return false; // Invalid searchValue (not a number)
+                            }
+                        default:
+                            return false; // Invalid searchBy value
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    //##########################################################################################
+    //---------------------------------------SEARCH REVIEW--------------------------------------------------------------
+    //########################################################################################## 
+    private void btnSearchReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchReviewActionPerformed
+        searchBy = cbSearchTypeReview.getSelectedItem().toString();
+        searchValue = txtSearchReview.getText();
+
+        if (searchBy.equalsIgnoreCase("SEARCH BY")) {
+            JOptionPane.showMessageDialog(rootPane, "PLEASE CHOOSE THE CONDITION!", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            // Call the sorting method based on selected values         
+            populateReviewJTableAfterSearch(searchBy, searchValue);
+            txtSearchReview.setText("");
+        }
+    }//GEN-LAST:event_btnSearchReviewActionPerformed
+
+    public void populateReviewJTableAfterSearch(String searchBy, String searchValue) {
+        invalidRatingValue = false;
+        reviews = resDB.getAllReview();
+        sortReviews = sortReviews(reviews, searchBy, searchValue);
+        
+        if (invalidRatingValue) {
+            // Display an error message for invalid rating value only once
+            JOptionPane.showMessageDialog(rootPane, "INVALID RATING VALUE. PLEASE ENTER A VALID NUMBER!", "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+
+        if (sortReviews.isEmpty()) {
+            JOptionPane.showMessageDialog(rootPane, "NO MATCHING REVIEWS FOUND!", "NO RESULTS", JOptionPane.ERROR_MESSAGE);
+        } else {
+            DefaultTableModel model = new DefaultTableModel();
+            // Add columns to the table model
+            model.addColumn("REVIEW ID");
+            model.addColumn("NAME");
+            model.addColumn("REVIEW");
+            model.addColumn("RATING");
+
+            for (Review review : sortReviews) {
+                reviewID = review.getReviewID();
+                name = review.getResName();
+                reviewText = review.getReview();
+                rating = review.getRating();
+
+                // Add a new row to the table model with name, review, and rating
+                model.addRow(new Object[]{reviewID, name, reviewText, rating});
+            }
+
+            tblReview.setModel(model);
+            JOptionPane.showMessageDialog(rootPane, "REVIEWS FOUND!", "FOUND", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private List<Review> sortReviews(List<Review> reviews, String searchBy, String searchValue) {
+        return reviews.stream()
+                .filter(review -> {
+                    switch (searchBy) {
+                        case "NAME":
+                            return review.getResName().equalsIgnoreCase(searchValue);
+                        case "REVIEW":
+                            return review.getReview().contains(searchValue);
+                        case "RATING":
+                        try {
+                            searchRating = Double.parseDouble(searchValue);
+                            return review.getRating() == searchRating;
+                        } catch (NumberFormatException e) {
+                            // Invalid searchValue (not a number)
+                            // Set the invalidRatingValue flag to true to display the error message later
+                            invalidRatingValue = true;
+                            return false;
+                        }
+                        default:
+                            return false; // Invalid searchBy value
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+    //##########################################################################################
+    //---------------------------------------SORT RESTAURANT--------------------------------------------------------------
+    //##########################################################################################
+    private void btnSortRestaurantActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortRestaurantActionPerformed
+        // TODO add your handling code here:
+        String sortBy = cboSortByRestaurant.getSelectedItem().toString();
+        String orderBy = cboSortOrderRestaurant.getSelectedItem().toString();
+
+        if (sortBy.equalsIgnoreCase("SORT BY") || orderBy.equalsIgnoreCase("ORDER BY")) {
+            JOptionPane.showMessageDialog(rootPane, "PLEASE CHOOSE THE CONDITION!", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Call the sorting method based on selected values
+            sortRestaurants(sortBy, orderBy);
+            JOptionPane.showMessageDialog(rootPane, "SORTED!", "SORT", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+
+    }//GEN-LAST:event_btnSortRestaurantActionPerformed
+
+    private void sortRestaurants(String sortBy, String orderBy) {
+        List<Restaurant> restaurants = resDB.getAllRestaurants();
+
+        //Sort the data based on the selected field and order
+        switch (sortBy) {
+            case "NAME":
+                restaurants.sort(Comparator.comparing(Restaurant::getName));
+                break;
+            case "LOCATION":
+                restaurants.sort(Comparator.comparing(Restaurant::getLocation));
+                break;
+            case "CUISINE":
+                restaurants.sort(Comparator.comparing(Restaurant::getCuisine));
+                break;
+            case "AVERAGE RATING":
+                restaurants.sort(Comparator.comparingDouble(r -> resDB.getAverageRatingForRestaurant(r.getName()))); //lambda
+                break;
+            default:
+                // Invalid sort field
+                return;
+        }
+
+        // Apply descending order if selected
+        if (orderBy.equalsIgnoreCase("Descending")) {
+            Collections.reverse(restaurants);
+        }
+
+        // Get the table model from the JTable
+        DefaultTableModel model = (DefaultTableModel) tblRestaurant.getModel();
+
+        // Clear the current data in the table model
+        model.setRowCount(0);
+
+        // Add the sorted data to the table model
+        for (Restaurant restaurant : restaurants) {
+            String name = restaurant.getName();
+            String location = restaurant.getLocation();
+            String cuisine = restaurant.getCuisine();
+            double averageRating = resDB.getAverageRatingForRestaurant(name);
+            // Add a new row to the table model with name, location, cuisine, and average rating
+            model.addRow(new Object[]{name, location, cuisine, averageRating});
+        }
+    }
+
+    //##########################################################################################
+    //---------------------------------------SORT REVIEW--------------------------------------------------------------
+    //##########################################################################################
+    private void btnSortReviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSortReviewActionPerformed
+        // TODO add your handling code here:
+        String sortBy = cboSortByReview.getSelectedItem().toString();
+        String orderBy = cboSortOrderReview.getSelectedItem().toString();
+
+        if (sortBy.equalsIgnoreCase("SORT BY") || orderBy.equalsIgnoreCase("ORDER BY")) {
+            JOptionPane.showMessageDialog(rootPane, "PLEASE CHOOSE THE CONDITION!", "ERROR", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            // Call the sorting method based on selected values
+            sortReviews(sortBy, orderBy);
+            JOptionPane.showMessageDialog(rootPane, "REVIEWS SORTED!", "SORT", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }//GEN-LAST:event_btnSortReviewActionPerformed
+
+    private void sortReviews(String sortBy, String orderBy) {
+        List<Review> reviews = resDB.getAllReview();
+
+        // Sort the data based on the selected field and order
+        switch (sortBy) {
+            case "NAME":
+                reviews.sort(Comparator.comparing(Review::getResName));
+                break;
+            case "REVIEW":
+                reviews.sort(Comparator.comparing(Review::getReview));
+                break;
+            case "RATING":
+                reviews.sort(Comparator.comparingDouble(Review::getRating));
+                break;
+            default:
+                // Invalid sort field
+                return;
+        }
+
+        // Apply descending order if selected
+        if (orderBy.equalsIgnoreCase("Descending")) {
+            Collections.reverse(reviews);
+        }
+
+        // Get the table model from the JTable
+        DefaultTableModel model = (DefaultTableModel) tblReview.getModel();
+
+        // Clear the current data in the table model
+        model.setRowCount(0);
+
+        // Add the sorted data to the table model
+        for (Review review : reviews) {
+            int reviewID = review.getReviewID();
+            String name = review.getResName();
+            String reviewText = review.getReview();
+            double rating = review.getRating();
+            // Add a new row to the table model with name, review, and rating
+            model.addRow(new Object[]{reviewID, name, reviewText, rating});
+        }
+    }
+
+    //#########################-------POPULATE TABLE RESTAURANT--########################
+    public void populateRestaurantJTable() {
         List<Restaurant> restaurants = resDB.getAllRestaurants();
         DefaultTableModel model = new DefaultTableModel();
 
@@ -843,38 +1274,37 @@ public class GUI extends javax.swing.JFrame {
             double averageRating = resDB.getAverageRatingForRestaurant(name);
 
             // Add a new row to the table model with name, location, cuisine, and average rating
-            model.addRow(new Object[] { name, location, cuisine, averageRating });
+            model.addRow(new Object[]{name, location, cuisine, averageRating});
         }
 
         // Set the table model to the JTable
         tblRestaurant.setModel(model);
-}
+    }
 
-    public void updateReviewJTable() {
-         List<Review> reviews = resDB.getAllReview();
+    //#########################-------POPULATE TABLE REVIEW--########################
+    public void populateReviewJTable() {
+        List<Review> reviews = resDB.getAllReview();
         DefaultTableModel model = new DefaultTableModel();
 
         // Add columns to the table model
+        model.addColumn("REVIEW ID");
         model.addColumn("NAME");
         model.addColumn("REVIEW");
         model.addColumn("RATING");
 
         for (Review r : reviews) {
+            int id = r.getReviewID();
             String n = r.getResName();
             String re = r.getReview();
             double ra = r.getRating();
 
-            // Add a new row to the table model with name, review, rating
-            model.addRow(new Object[] { n, re, ra });
+            // Add a new row to the table model with ID, name, review, rating
+            model.addRow(new Object[]{id, n, re, ra});
         }
         // Set the table model to the JTable
         tblReview.setModel(model);
-}
+    }
 
-    
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -886,17 +1316,27 @@ public class GUI extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 
@@ -923,21 +1363,21 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton btnMoveToAddReviewPanel;
     private javax.swing.JButton btnOpenManageRestaurant;
     private javax.swing.JButton btnOpenManageReview;
-    private javax.swing.JButton btnRefreshTable;
-    private javax.swing.JButton btnRefreshTable1;
-    private javax.swing.JButton btnSearch;
-    private javax.swing.JButton btnSearch1;
-    private javax.swing.JButton btnSort;
-    private javax.swing.JButton btnSort1;
+    private javax.swing.JButton btnRefreshTableRestaurant;
+    private javax.swing.JButton btnRefreshTableReview;
+    private javax.swing.JButton btnSearchRestaurant;
+    private javax.swing.JButton btnSearchReview;
+    private javax.swing.JButton btnSortRestaurant;
+    private javax.swing.JButton btnSortReview;
     private javax.swing.JButton btnUpdate;
-    private javax.swing.JButton btnUpdate1;
+    private javax.swing.JButton btnUpdateReview;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbSearchType;
-    private javax.swing.JComboBox<String> cbSearchType1;
-    private javax.swing.JComboBox<String> cboSortBy;
-    private javax.swing.JComboBox<String> cboSortBy1;
-    private javax.swing.JComboBox<String> cboSortOrder;
-    private javax.swing.JComboBox<String> cboSortOrder1;
+    private javax.swing.JComboBox<String> cbSearchTypeReview;
+    private javax.swing.JComboBox<String> cboSortByRestaurant;
+    private javax.swing.JComboBox<String> cboSortByReview;
+    private javax.swing.JComboBox<String> cboSortOrderRestaurant;
+    private javax.swing.JComboBox<String> cboSortOrderReview;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -973,6 +1413,5 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel txtTitle1;
     private javax.swing.JLabel txtTitle2;
     // End of variables declaration//GEN-END:variables
-
 
 }
